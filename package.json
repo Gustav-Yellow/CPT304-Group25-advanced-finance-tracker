@@ -1,0 +1,33 @@
+{
+  "name": "cpt304-group25-advanced-finance-tracker",
+  "version": "1.0.0",
+  "description": "A portfolio-level personal finance management application built with HTML, CSS, and Vanilla JavaScript.   This project was intentionally developed without frameworks or third-party libraries to demonstrate a strong understanding of core front-end fundamentals and application architecture.",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gustav-Yellow/CPT304-Group25-advanced-finance-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gustav-Yellow/CPT304-Group25-advanced-finance-tracker/issues"
+  },
+  "homepage": "https://github.com/Gustav-Yellow/CPT304-Group25-advanced-finance-tracker#readme",
+  "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
+    "babel-jest": "^30.3.0",
+    "jest": "^30.3.0"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "*.js",
+      "!*.test.js",
+      "!babel.config.js"
+    ]
+  }
+}
