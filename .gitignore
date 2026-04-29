@@ -1,2 +1,25 @@
+# 依赖包与测试报告 (你已有的)
 node_modules/
 coverage/
+
+# macOS 系统文件 (解决你的痛点)
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows 系统文件
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# 编辑器与 IDE 配置文件
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+
+# 环境变量 (安全最佳实践，以防后续用到)
+.env
+.env.local
+.DS_Store

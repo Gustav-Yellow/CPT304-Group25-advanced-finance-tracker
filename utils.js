@@ -47,3 +47,18 @@ export const groupByMonth = (transactions) => {
 
   return groups;
 };
+
+/**
+ * Escape HTML special characters to prevent DOM-based XSS.
+ * Converts <, >, &, ", ' to their corresponding HTML entities.
+ */
+export const escapeHTML = (str) => {
+  const map = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  };
+  return String(str).replace(/[&<>"']/g, (char) => map[char]);
+};
