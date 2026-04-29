@@ -3,7 +3,14 @@
  * Dependencies: utils.js, state.js, dom.js, ui.js, chart.js
  */
 
-import { generateID, formatCurrency, formatDate, groupByMonth } from './utils.js';
+/**
+ * Old import from utils.js, doesn't include utils.js
+ */
+// import { generateID, formatCurrency, formatDate, groupByMonth } from './utils.js';
+/**
+ * New import escapeHTML
+ */
+import { generateID, formatCurrency, formatDate, groupByMonth, escapeHTML } from './utils.js';
 import { state, saveToLocalStorage, loadFromLocalStorage, loadTheme, setTheme } from './state.js';
 import { dom } from './dom.js';
 import { showToast, clearErrors, setError } from './ui.js';
@@ -68,6 +75,37 @@ const filterTransactions = () => {
   });
 };
 
+/**
+ * Old Version: Rendering unescaped HTML into the DOM via innerHTML
+ * @param {*} tx 
+ * @returns 
+ */
+// const renderTransactionItem = (tx) => {
+//   const typeClass = tx.amount >= 0 ? "amount--income" : "amount--expense";
+//   const formattedAmount = formatCurrency(tx.amount);
+//   const formattedDate = formatDate(tx.date);
+
+//   return `
+//     <div class="transaction">
+//       <div>
+//         <p class="transaction__title">${tx.title}</p>
+//         <div class="transaction__meta">
+//           <span class="badge">${tx.category}</span>
+//           <span>${formattedDate}</span>
+//         </div>
+//       </div>
+//       <div>
+//         <p class="amount ${typeClass}">${formattedAmount}</p>
+//         <button class="edit-btn" data-id="${tx.id}">Edit</button>
+//         <button class="delete-btn" data-id="${tx.id}">Delete</button>
+//       </div>
+//     </div>
+//   `;
+// };
+
+/**
+ * Fixed Version
+ */
 const renderTransactionItem = (tx) => {
   const typeClass = tx.amount >= 0 ? "amount--income" : "amount--expense";
   const formattedAmount = formatCurrency(tx.amount);
@@ -76,9 +114,9 @@ const renderTransactionItem = (tx) => {
   return `
     <div class="transaction">
       <div>
-        <p class="transaction__title">${tx.title}</p>
+        <p class="transaction__title">${escapeHTML(tx.title)}</p>
         <div class="transaction__meta">
-          <span class="badge">${tx.category}</span>
+          <span class="badge">${escapeHTML(tx.category)}</span>
           <span>${formattedDate}</span>
         </div>
       </div>
