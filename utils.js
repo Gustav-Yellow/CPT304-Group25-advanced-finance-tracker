@@ -62,3 +62,15 @@ export const escapeHTML = (str) => {
   };
   return String(str).replace(/[&<>"']/g, (char) => map[char]);
 };
+
+/**
+ * Sanitize a CSV cell value to prevent formula injection.
+ * If the value starts with =, +, -, or @, prepend a single quote.
+ */
+export const sanitizeCSVCell = (cell) => {
+  let str = String(cell).replaceAll('"', '""');
+  if (/^[=+\-@]/.test(str)) {
+    str = "'" + str;
+  }
+  return `"${str}"`;
+};

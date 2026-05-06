@@ -1,4 +1,4 @@
-import { generateID, formatCurrency, formatDate, groupByMonth, escapeHTML } from './utils.js';
+import { generateID, formatCurrency, formatDate, groupByMonth, escapeHTML, sanitizeCSVCell } from './utils.js';
 
 describe('Utils Module Tests', () => {
 
@@ -74,20 +74,49 @@ describe('Utils Module Tests', () => {
 
   // Test suite for the newly added escapeHTML utility function (DOM-based XSS mitigation)
   describe('escapeHTML', () => {
-    // Test to verify that dangerous HTML characters (<, >, &, ", ') are correctly 
+    // Test to verify that dangerous HTML characters (<, >, &, ", ') are correctly
     // escaped into their corresponding safe HTML entities to prevent XSS attacks.
     test('should escape dangerous HTML characters to prevent XSS', () => {
       const maliciousInput = '<script>alert("xss & hack")</script>';
       const safeOutput = '&lt;script&gt;alert(&quot;xss &amp; hack&quot;)&lt;/script&gt;';
-      
+
       expect(escapeHTML(maliciousInput)).toBe(safeOutput);
     });
 
-    // Test to ensure that non-string inputs (like numbers or null) are converted 
+    // Test to ensure that non-string inputs (like numbers or null) are converted
     // to strings safely without breaking the application logic.
     test('should convert non-string inputs to strings safely', () => {
       expect(escapeHTML(123)).toBe('123');
       expect(escapeHTML(null)).toBe('null');
+    });
+  });
+
+  // Test suite for the newly added sanitizeCSVCell utility function (CSV Formula Injection mitigation)
+  describe('sanitizeCSVCell', () => {
+    // Test to verify that plain text is wrapped in double quotes.
+    test('should wrap plain text in double quotes', () => {
+      expect(sanitizeCSVCell('Salary')).toBe('"Salary"');
+    });
+
+    // Test to verify that existing double quotes are escaped correctly.
+    test('should escape existing double quotes', () => {
+      expect(sanitizeCSVCell('Say "Hello"')).toBe('"Say ""Hello"""');
+    });
+
+    // Test to verify that formula-triggering characters at the start are neutralized
+    // with a leading single quote, preventing CSV Injection in Excel / Sheets.
+    test('should prepend single quote to formula-triggering characters', () => {
+      expect(sanitizeCSVCell('=cmd')).toBe('"\'=cmd"');
+      expect(sanitizeCSVCell('+cmd')).toBe('"\'+cmd"');
+      expect(sanitizeCSVCell('-cmd')).toBe('"\'-cmd"');
+      expect(sanitizeCSVCell('@cmd')).toBe('"\'@cmd"');
+    });
+
+    // Test to verify that numbers are handled correctly, including negative values
+    // which start with a minus sign and must be protected.
+    test('should handle numbers correctly', () => {
+      expect(sanitizeCSVCell(1200)).toBe('"1200"');
+      expect(sanitizeCSVCell(-45)).toBe('"\'-45"');
     });
   });
 

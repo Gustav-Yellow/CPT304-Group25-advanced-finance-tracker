@@ -10,7 +10,7 @@
 /**
  * New import escapeHTML
  */
-import { generateID, formatCurrency, formatDate, groupByMonth, escapeHTML } from './utils.js';
+import { generateID, formatCurrency, formatDate, groupByMonth, escapeHTML, sanitizeCSVCell } from './utils.js';
 import { state, saveToLocalStorage, loadFromLocalStorage, loadTheme, setTheme } from './state.js';
 import { dom } from './dom.js';
 import { showToast, clearErrors, setError } from './ui.js';
@@ -252,6 +252,7 @@ const closeConfirmModal = () => {
   dom.confirmModal.setAttribute("aria-hidden", "true");
 };
 
+// Defect2：csv injection
 const exportToCSV = () => {
   if (state.transactions.length === 0) {
     showToast("No data to export.", "error");
@@ -267,9 +268,7 @@ const exportToCSV = () => {
   ]);
 
   const csv = [headers, ...rows]
-    .map((row) =>
-      row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(","),
-    )
+    .map((row) => row.map(sanitizeCSVCell).join(","))
     .join("\n");
 
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
