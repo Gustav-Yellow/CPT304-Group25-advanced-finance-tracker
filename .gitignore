@@ -1,8 +1,8 @@
-# 依赖包与测试报告 (你已有的)
+# 依赖包与测试报告
 node_modules/
 coverage/
 
-# macOS 系统文件 (解决你的痛点)
+# macOS 系统文件
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -18,8 +18,19 @@ Desktop.ini
 *.suo
 *.ntvs*
 *.njsproj
+*.sln
+*.sw?
 
-# 环境变量 (安全最佳实践，以防后续用到)
+# 环境变量（安全，防止密钥泄露）
 .env
 .env.local
-.DS_Store
+
+# 日志文件
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# 构建输出（如项目有构建目录请保留）
+dist/
+build/
