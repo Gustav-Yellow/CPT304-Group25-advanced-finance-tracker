@@ -10,7 +10,7 @@
 /**
  * New import escapeHTML
  */
-import { generateID, formatCurrency, formatDate, groupByMonth, escapeHTML, sanitizeCSVCell } from './utils.js';
+import { generateID, formatCurrency, formatDate, groupByMonth, escapeHTML, sanitizeCSVCell, debounceRAF  } from './utils.js';
 import { state, saveToLocalStorage, loadFromLocalStorage, loadTheme, setTheme } from './state.js';
 import { dom } from './dom.js';
 import { showToast, clearErrors, setError } from './ui.js';
@@ -334,10 +334,10 @@ const initializeApp = () => {
     renderTransactions();
   });
 
-  dom.searchInput.addEventListener("input", (e) => {
-    state.filters.search = e.target.value;
-    renderTransactions();
-  });
+  dom.searchInput.addEventListener("input", debounceRAF((e) => {
+  state.filters.search = e.target.value;
+  renderTransactions();
+  }, 300));
 
   dom.resetFiltersBtn.addEventListener("click", () => {
     state.filters = { category: "all", type: "all", search: "" };

@@ -74,3 +74,21 @@ export const sanitizeCSVCell = (cell) => {
   }
   return `"${str}"`;
 };
+
+/**
+  * Create a debounced version of a function with requestAnimationFrame.
+ * The returned function delays invoking `fn` until `delay` milliseconds
+ * have elapsed since the last invocation, then executes during the next
+ * browser repaint cycle to avoid layout thrashing.
+ */
+export const debounceRAF = (fn, delay = 300) => {
+  let timer;  
+  let rafId;
+  return (...args) => {
+    clearTimeout(timer);
+    window.cancelAnimationFrame(rafId);
+    timer = setTimeout(() => {
+      rafId = window.requestAnimationFrame(() => fn(...args));
+    }, delay);
+  };
+};

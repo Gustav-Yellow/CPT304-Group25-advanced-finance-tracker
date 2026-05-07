@@ -1,4 +1,5 @@
-import { generateID, formatCurrency, formatDate, groupByMonth, escapeHTML, sanitizeCSVCell } from './utils.js';
+/** @jest-environment jsdom */
+import { generateID, formatCurrency, formatDate, groupByMonth, escapeHTML, sanitizeCSVCell ,debounceRAF } from './utils.js';
 
 describe('Utils Module Tests', () => {
 
@@ -120,4 +121,92 @@ describe('Utils Module Tests', () => {
     });
   });
 
+  describe('debounceRAF', () => {
+    let originalRAF;
+    let originalCancelRAF;
+
+    beforeEach(() => {
+      jest.useFakeTimers();
+
+      // Save original functions
+      originalRAF = window.requestAnimationFrame;
+      originalCancelRAF = window.cancelAnimationFrame;
+
+      // Directly assign mocks to window
+      window.requestAnimationFrame = jest.fn(cb => {
+        cb();
+        return 1;
+      });
+      window.cancelAnimationFrame = jest.fn();
+    });
+
+    afterEach(() => {
+      // Restore originals to avoid side effects
+      window.requestAnimationFrame = originalRAF;
+      window.cancelAnimationFrame = originalCancelRAF;
+
+      jest.clearAllTimers();
+      jest.restoreAllMocks();
+    });
+
+    test('should invoke the function only after the specified delay', () => {
+      const mockFn = jest.fn();
+      const debounced = debounceRAF(mockFn, 300);
+
+      debounced();
+      expect(mockFn).not.toHaveBeenCalled();
+
+      jest.advanceTimersByTime(300); // Let the debounce timeout fire
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+    });
+
+    test('should reset the timer on rapid successive calls (debounce behavior)', () => {
+      const mockFn = jest.fn();
+      const debounced = debounceRAF(mockFn, 300);
+
+      debounced();
+      jest.advanceTimersByTime(100);
+      debounced(); // resets timer
+      jest.advanceTimersByTime(100);
+      debounced(); // resets again
+      jest.advanceTimersByTime(299);
+      debounced(); // resets once more
+
+      expect(mockFn).not.toHaveBeenCalled();
+
+      jest.advanceTimersByTime(300);
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+    });
+
+    test('should pass the original arguments to the wrapped function', () => {
+      const mockFn = jest.fn();
+      const debounced = debounceRAF(mockFn, 300);
+
+      debounced('search', 42);
+
+      jest.advanceTimersByTime(300);
+
+      expect(mockFn).toHaveBeenCalledWith('search', 42);
+    });
+
+    test('should cancel the previous requestAnimationFrame on a new invocation', () => {
+      const mockFn = jest.fn();
+      const debounced = debounceRAF(mockFn, 300);
+
+      debounced();
+      jest.advanceTimersByTime(200);
+      debounced(); // should cancel previous rAF
+
+      expect(window.cancelAnimationFrame).toHaveBeenCalled();
+      expect(mockFn).not.toHaveBeenCalled();
+
+      jest.advanceTimersByTime(300);
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+    });
+  });
+
 });
+
