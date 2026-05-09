@@ -39,6 +39,9 @@ const dom = {
   totalIncome: document.getElementById("totalIncome"),
   totalExpenses: document.getElementById("totalExpenses"),
   financeChart: document.getElementById("financeChart"),
+  srIncome: document.getElementById("srIncome"),
+  srExpenses: document.getElementById("srExpenses"),
+  srBalance: document.getElementById("srBalance"),
   confirmModal: document.getElementById("confirmModal"),
   confirmDeleteBtn: document.getElementById("confirmDeleteBtn"),
   cancelDeleteBtn: document.getElementById("cancelDeleteBtn"),
@@ -392,7 +395,7 @@ const renderChart = () => {
     barWidth,
     expenseHeight,
   );
-
+  
   ctx.fillStyle = "#f8f4e9";
   ctx.font = "14px sans-serif";
   ctx.fillText("Income", 170, baseY + 20);
@@ -404,6 +407,14 @@ const renderChart = () => {
     150 + barWidth + gap,
     baseY - expenseHeight - 10,
   );
+  if (dom.srIncome && dom.srExpenses && dom.srBalance) {
+    const totalIncome = amounts.filter((a) => a > 0).reduce((s, a) => s + a, 0);
+    const totalExpenses = Math.abs(amounts.filter((a) => a < 0).reduce((s, a) => s + a, 0));
+    const totalBalance = totalIncome - totalExpenses;
+    dom.srIncome.textContent = formatCurrency(totalIncome);
+    dom.srExpenses.textContent = formatCurrency(totalExpenses);
+    dom.srBalance.textContent = formatCurrency(totalBalance);
+  }
 };
 
 const renderApp = () => {
