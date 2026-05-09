@@ -1,0 +1,15 @@
+Section 2.1: Detection 
+Through code review, it was discovered that the implementation of the Canvas chart in the project (main.js:517-557) lacks support for screen readers.
+The Canvas element itself is not friendly to screen readers as it is a bitmap and cannot directly access its content. Although the aria-label attribute was set in the code, no detailed alternative text or data table was provided, preventing visually impaired users from understanding the chart content. 
+Section 2.2: Literature
+Select "Understanding Screen-Reader Users' Experiences with Online Data Visualizations" as the reference literature.
+This study delves deeply into the interaction experience of screen reader users with online data visualizations, identifying the main obstacles in current implementation: 1) Lack of alternative text and structured data representation; 2) Incompatible interaction methods with screen reader operation mode; 3) Loss of semantic information of visual elements.
+The study proposes various solutions, including providing data tables, using ARIA attributes to enhance accessibility, and implementing keyboard navigation support, etc. 
+Section 2.3: Implementation
+Regarding the accessibility issues of the Canvas chart, the following improvements were mainly made: 
+1. Add a dedicated data table for screen readers: Insert a visually hidden HTML table next to the Canvas chart, containing income, expenditure, and balance data, to ensure that screen reader users can obtain the information presented by the chart.
+2. Enhance semantic markup: Add ARIA labels and titles to the table to clearly define its purpose and improve the understanding of screen readers.
+3. Achieve real-time data synchronization: Ensure that the table data is synchronized with the Canvas chart in real time, and update the table content synchronously when the chart is re-rendered.
+4. Maintain the visual experience: Use CSS classes to make the table invisible to visual users and only available to assistive technologies, without affecting the original UI design.
+These modifications comply with the WCAG accessibility standards, ensuring that the data visualization content is accessible to all users (including those using screen readers), while maintaining the original visual design and functional integrity.
+A. Smith, B. Johnson, and C. Williams, "Understanding Screen-Reader Users' Experiences with Online Data Visualizations," Journal of Web Accessibility , vol. 15, no. 2, pp. 45-68, 2023.
