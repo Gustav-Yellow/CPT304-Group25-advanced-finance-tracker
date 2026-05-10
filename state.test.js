@@ -26,7 +26,13 @@ describe('State Module Tests', () => {
       expect(state.transactions).toEqual(transactions);
     });
 
-    test('should fall back to an empty array when localStorage contains invalid JSON', () => {
+    test('should use an empty transaction list when localStorage has no saved data', () => {
+      loadFromLocalStorage();
+
+      expect(state.transactions).toEqual([]);
+    });
+
+    test('should not crash when localStorage contains invalid JSON', () => {
       localStorage.setItem(STORAGE_KEY, '{bad json');
 
       expect(() => loadFromLocalStorage()).not.toThrow();
@@ -41,29 +47,30 @@ describe('State Module Tests', () => {
       expect(state.transactions).toEqual([]);
     });
 
-    test('should filter out malformed transactions from stored arrays', () => {
-      const stored = [
-        {
-          id: 'tx_1',
-          title: 'Salary',
-          amount: 1200,
-          category: 'Salary',
-          date: '2026-04-07',
-        },
-        {
-          id: 'tx_2',
-          title: null,
-          amount: 50,
-          category: 'Food',
-          date: '2026-04-08',
-        },
+    test('should filter malformed transactions from stored arrays', () => {
+      const validTransaction = {
+        id: 'tx_1',
+        title: 'Salary',
+        amount: 1200,
+        category: 'Salary',
+        date: '2026-04-07',
+      };
+
+      const malformedTransactions = [
+        { id: 'tx_2', title: null, amount: 50, category: 'Food', date: '2026-04-08' },
+        { id: 'tx_3', title: 'Food', amount: '50', category: 'Food', date: '2026-04-08' },
+        { id: 'tx_4', title: 'Invalid amount', amount: Infinity, category: 'Other', date: '2026-04-09' },
+        { title: 'Missing id', amount: 100, category: 'Other', date: '2026-04-10' },
       ];
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify([validTransaction, ...malformedTransactions]),
+      );
 
       loadFromLocalStorage();
 
-      expect(state.transactions).toEqual([stored[0]]);
+      expect(state.transactions).toEqual([validTransaction]);
     });
   });
 });
