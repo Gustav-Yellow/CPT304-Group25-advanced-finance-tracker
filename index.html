@@ -57,10 +57,25 @@
 
       <section class="card chart">
         <div class="transactions__header">
-          <h3 class="section-title">Cash Flow Overview</h3>
+          <h3 class="section-title" id="financeChartTitle">
+            Cash Flow Overview
+          </h3>
           <p class="transactions__meta">Income vs Expense</p>
         </div>
-        <canvas id="financeChart" width="800" height="260"></canvas>
+        <canvas
+          id="financeChart"
+          width="800"
+          height="260"
+          role="img"
+          aria-label="Bar chart comparing total income and total expenses."
+          aria-describedby="financeChartDescription"
+        >
+          Bar chart comparing total income and total expenses.
+        </canvas>
+        <p class="sr-only" id="financeChartDescription" aria-live="polite">
+          Bar chart comparing total income and total expenses. Total income is
+          $0.00. Total expenses are $0.00.
+        </p>
       </section>
 
       <section class="grid">
