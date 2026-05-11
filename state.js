@@ -22,9 +22,34 @@ export const saveToLocalStorage = () => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state.transactions));
 };
 
+const isValidTransaction = (transaction) => {
+  return (
+    transaction &&
+    typeof transaction.id === "string" &&
+    typeof transaction.title === "string" &&
+    typeof transaction.amount === "number" &&
+    Number.isFinite(transaction.amount) &&
+    typeof transaction.category === "string" &&
+    typeof transaction.date === "string"
+  );
+};
+
 export const loadFromLocalStorage = () => {
   const stored = localStorage.getItem(STORAGE_KEY);
-  state.transactions = stored ? JSON.parse(stored) : [];
+
+  if (!stored) {
+    state.transactions = [];
+    return;
+  }
+
+  try {
+    const parsed = JSON.parse(stored);
+    state.transactions = Array.isArray(parsed)
+      ? parsed.filter(isValidTransaction)
+      : [];
+  } catch {
+    state.transactions = [];
+  }
 };
 
 export const saveTheme = () => {
