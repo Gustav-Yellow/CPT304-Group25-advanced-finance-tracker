@@ -27,6 +27,7 @@ export const dom = {
   totalIncome: document.getElementById("totalIncome"),
   totalExpenses: document.getElementById("totalExpenses"),
   financeChart: document.getElementById("financeChart"),
+  financeChartDescription: document.getElementById("financeChartDescription"),
   confirmModal: document.getElementById("confirmModal"),
   confirmDeleteBtn: document.getElementById("confirmDeleteBtn"),
   cancelDeleteBtn: document.getElementById("cancelDeleteBtn"),

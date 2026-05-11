@@ -68,4 +68,15 @@ export const renderChart = () => {
     150 + barWidth + gap,
     baseY - expenseHeight - 10,
   );
+
+  const chartDescription =
+    `Bar chart comparing total income and total expenses. ` +
+    `Total income is ${formatCurrency(income)}. ` +
+    `Total expenses are ${formatCurrency(expenses)}.`;
+
+  canvas.setAttribute("aria-label", chartDescription);
+
+  if (dom.financeChartDescription) {
+    dom.financeChartDescription.textContent = chartDescription;
+  }
 };
