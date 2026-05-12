@@ -5,6 +5,7 @@
 
 export const STORAGE_KEY = "financeTrackerData";
 export const THEME_KEY = "financeTrackerTheme";
+export const COOKIE_KEY = "financeTrackerCookieConsent";
 
 export const state = {
   transactions: [],
@@ -16,6 +17,7 @@ export const state = {
   editingId: null,
   pendingDeleteId: null,
   theme: "dark",
+  cookieConsent: null,
 };
 
 export const saveToLocalStorage = () => {
@@ -69,4 +71,14 @@ export const setTheme = (theme) => {
 export const loadTheme = () => {
   const storedTheme = localStorage.getItem(THEME_KEY);
   setTheme(storedTheme || "dark");
+};
+
+export const saveCookieConsent = () => {
+  if (state.cookieConsent) {
+    localStorage.setItem(COOKIE_KEY, state.cookieConsent);
+  }
+};
+
+export const loadCookieConsent = () => {
+  return localStorage.getItem(COOKIE_KEY) || null;
 };

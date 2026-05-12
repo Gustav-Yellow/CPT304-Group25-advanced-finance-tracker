@@ -46,6 +46,13 @@ describe('UI Module Tests', () => {
       <button id="cancelDeleteBtn">Cancel</button>
       <div id="toastContainer"></div>
       <div id="skeleton"></div>
+      <div id="cookieBanner" aria-hidden="true"></div>
+      <button id="acceptCookiesBtn">Accept</button>
+      <button id="declineCookiesBtn">Decline</button>
+      <div id="privacyModal" aria-hidden="true"></div>
+      <button id="closePrivacyBtn">Close</button>
+      <button id="privacyLinkFromBanner">Privacy Policy</button>
+      <button id="privacyLinkFromFooter">Privacy Policy</button>
     `;
 
     const ui = await import('./ui.js');

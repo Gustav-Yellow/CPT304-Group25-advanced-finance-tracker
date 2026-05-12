@@ -34,4 +34,11 @@ export const dom = {
   cancelDeleteBtn: document.getElementById("cancelDeleteBtn"),
   toastContainer: document.getElementById("toastContainer"),
   skeleton: document.getElementById("skeleton"),
+  cookieBanner: document.getElementById("cookieBanner"),
+  acceptCookiesBtn: document.getElementById("acceptCookiesBtn"),
+  declineCookiesBtn: document.getElementById("declineCookiesBtn"),
+  privacyModal: document.getElementById("privacyModal"),
+  closePrivacyBtn: document.getElementById("closePrivacyBtn"),
+  privacyLinkFromBanner: document.getElementById("privacyLinkFromBanner"),
+  privacyLinkFromFooter: document.getElementById("privacyLinkFromFooter"),
 };
