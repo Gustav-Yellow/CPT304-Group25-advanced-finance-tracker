@@ -162,16 +162,16 @@ describe('State Module Tests', () => {
       expect(document.body.classList.contains('theme-light')).toBe(false);
     });
 
-    test('should update themeToggleBtn text content when button exists', () => {
+    test('should update themeToggleBtn data-i18n attribute when button exists', () => {
       const btn = document.createElement('button');
       btn.id = 'themeToggleBtn';
       document.body.appendChild(btn);
 
       setTheme('light');
-      expect(btn.textContent).toBe('Dark Mode');
+      expect(btn.getAttribute('data-i18n')).toBe('header.themeDark');
 
       setTheme('dark');
-      expect(btn.textContent).toBe('Light Mode');
+      expect(btn.getAttribute('data-i18n')).toBe('header.themeLight');
     });
 
     test('should handle missing themeToggleBtn element gracefully', () => {

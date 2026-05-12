@@ -310,6 +310,12 @@ body {
   color: var(--expense);
 }
 
+#languageToggleBtn {
+  font-size: 13px;
+  min-width: 56px;
+  text-align: center;
+}
+
 .edit-btn {
   margin-top: 6px;
   background: transparent;

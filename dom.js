@@ -21,6 +21,7 @@ export const dom = {
   resetFiltersBtn: document.getElementById("resetFiltersBtn"),
   exportCsvBtn: document.getElementById("exportCsvBtn"),
   themeToggleBtn: document.getElementById("themeToggleBtn"),
+  languageToggleBtn: document.getElementById("languageToggleBtn"),
   transactionsList: document.getElementById("transactionsList"),
   resultsCount: document.getElementById("resultsCount"),
   totalBalance: document.getElementById("totalBalance"),

@@ -61,7 +61,7 @@ export const setTheme = (theme) => {
   document.body.classList.toggle("theme-light", theme === "light");
   const themeToggleBtn = document.getElementById("themeToggleBtn");
   if (themeToggleBtn) {
-    themeToggleBtn.textContent = theme === "light" ? "Dark Mode" : "Light Mode";
+    themeToggleBtn.setAttribute("data-i18n", theme === "light" ? "header.themeDark" : "header.themeLight");
   }
   saveTheme();
 };

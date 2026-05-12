@@ -33,6 +33,7 @@ describe('UI Module Tests', () => {
       <button id="resetFiltersBtn">Reset</button>
       <button id="exportCsvBtn">Export CSV</button>
       <button id="themeToggleBtn">Light Mode</button>
+      <button id="languageToggleBtn">中文</button>
       <div id="transactionsList"></div>
       <span id="resultsCount"></span>
       <span id="totalBalance"></span>
