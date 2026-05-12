@@ -15,6 +15,7 @@ import { state, saveToLocalStorage, loadFromLocalStorage, loadTheme, setTheme } 
 import { dom } from './dom.js';
 import { showToast, clearErrors, setError } from './ui.js';
 import { renderChart } from './chart.js';
+import { t, loadLanguage, setLanguage, getLanguage, updatePageTranslations } from './i18n.js';
 
 export const validateForm = () => {
   clearErrors();
@@ -28,22 +29,22 @@ export const validateForm = () => {
   let isValid = true;
 
   if (!title) {
-    setError(dom.titleInput, dom.titleError, "Title is required.");
+    setError(dom.titleInput, dom.titleError, t("validation.titleRequired"));
     isValid = false;
   }
 
   if (!amountValue || Number.isNaN(amount) || amount === 0) {
-    setError(dom.amountInput, dom.amountError, "Enter a valid amount.");
+    setError(dom.amountInput, dom.amountError, t("validation.amountInvalid"));
     isValid = false;
   }
 
   if (!category) {
-    setError(dom.categoryInput, dom.categoryError, "Select a category.");
+    setError(dom.categoryInput, dom.categoryError, t("validation.categoryRequired"));
     isValid = false;
   }
 
   if (!date) {
-    setError(dom.dateInput, dom.dateError, "Pick a date.");
+    setError(dom.dateInput, dom.dateError, t("validation.dateRequired"));
     isValid = false;
   }
 
@@ -53,7 +54,7 @@ export const validateForm = () => {
 export const resetFormState = () => {
   dom.form.reset();
   state.editingId = null;
-  dom.submitBtn.textContent = "Add Transaction";
+  dom.submitBtn.textContent = t("form.submit");
   dom.cancelEditBtn.hidden = true;
   clearErrors();
 };
@@ -122,8 +123,8 @@ export const renderTransactionItem = (tx) => {
       </div>
       <div>
         <p class="amount ${typeClass}">${formattedAmount}</p>
-        <button class="edit-btn" data-id="${tx.id}">Edit</button>
-        <button class="delete-btn" data-id="${tx.id}">Delete</button>
+        <button class="edit-btn" data-id="${tx.id}">${escapeHTML(t("transaction.edit"))}</button>
+        <button class="delete-btn" data-id="${tx.id}">${escapeHTML(t("transaction.delete"))}</button>
       </div>
     </div>
   `;
@@ -150,14 +151,14 @@ export const renderSummary = () => {
 export const renderTransactions = () => {
   const filtered = filterTransactions();
 
-  dom.resultsCount.textContent = `${filtered.length} results`;
+  dom.resultsCount.textContent = t("transactions.results", { count: filtered.length });
 
   if (filtered.length === 0) {
     dom.transactionsList.innerHTML = `
       <div class="transactions__empty">
         <div class="empty__icon">+</div>
-        <p>No transactions yet. Add your first one to get started.</p>
-        <button class="btn btn--accent empty-add-btn" type="button">Add First Transaction</button>
+        <p>${escapeHTML(t("transactions.emptyTitle"))}</p>
+        <button class="btn btn--accent empty-add-btn" type="button">${escapeHTML(t("transactions.emptyButton"))}</button>
       </div>
     `;
     return;
@@ -185,7 +186,7 @@ export const renderApp = () => {
 
 export const addTransaction = () => {
   if (!validateForm()) {
-    showToast("Please fix the highlighted fields.", "error");
+    showToast(t("toast.fixFields"), "error");
     return;
   }
 
@@ -198,7 +199,7 @@ export const addTransaction = () => {
     state.transactions = state.transactions.map((tx) =>
       tx.id === state.editingId ? { ...tx, title, amount, category, date } : tx,
     );
-    showToast("Transaction updated.");
+    showToast(t("toast.transactionUpdated"));
   } else {
     const newTransaction = {
       id: generateID(),
@@ -209,7 +210,7 @@ export const addTransaction = () => {
     };
 
     state.transactions = [newTransaction, ...state.transactions];
-    showToast("Transaction added.");
+    showToast(t("toast.transactionAdded"));
   }
 
   resetFormState();
@@ -227,17 +228,17 @@ export const startEditing = (id) => {
   dom.dateInput.value = transaction.date;
 
   state.editingId = id;
-  dom.submitBtn.textContent = "Save Changes";
+  dom.submitBtn.textContent = t("form.saveChanges");
   dom.cancelEditBtn.hidden = false;
   dom.titleInput.focus();
-  showToast("Editing mode enabled.");
+  showToast(t("toast.editingMode"));
 };
 
 export const deleteTransaction = (id) => {
   state.transactions = state.transactions.filter((tx) => tx.id !== id);
   saveToLocalStorage();
   renderApp();
-  showToast("Transaction deleted.");
+  showToast(t("toast.transactionDeleted"));
 };
 
 export const openConfirmModal = (id) => {
@@ -255,7 +256,7 @@ export const closeConfirmModal = () => {
 // Defect2：csv injection
 export const exportToCSV = () => {
   if (state.transactions.length === 0) {
-    showToast("No data to export.", "error");
+    showToast(t("toast.noData"), "error");
     return;
   }
 
@@ -282,12 +283,14 @@ export const exportToCSV = () => {
   link.remove();
   URL.revokeObjectURL(url);
 
-  showToast("CSV exported.");
+  showToast(t("toast.csvExported"));
 };
 
 export const initializeApp = () => {
   loadFromLocalStorage();
+  loadLanguage();
   loadTheme();
+  updatePageTranslations();
   renderApp();
 
   setTimeout(() => {
@@ -351,6 +354,16 @@ export const initializeApp = () => {
 
   dom.themeToggleBtn.addEventListener("click", () => {
     setTheme(state.theme === "dark" ? "light" : "dark");
+    updatePageTranslations();
+  });
+
+  dom.languageToggleBtn.addEventListener("click", () => {
+    const newLang = getLanguage() === "en" ? "zh" : "en";
+    setLanguage(newLang);
+    const btn = dom.themeToggleBtn;
+    btn.setAttribute("data-i18n", state.theme === "light" ? "header.themeDark" : "header.themeLight");
+    updatePageTranslations();
+    renderApp();
   });
 
   dom.confirmDeleteBtn.addEventListener("click", () => {

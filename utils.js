@@ -3,6 +3,14 @@
  * No dependencies - fully testable
  */
 
+let currentLocale = "en-US";
+
+export const setLocale = (locale) => {
+  currentLocale = locale;
+};
+
+export const getLocale = () => currentLocale;
+
 export const generateID = () => {
   return `tx_${Date.now()}_${Math.random().toString(16).slice(2)}`;
 };
@@ -14,16 +22,16 @@ export const formatCurrency = (amount) => {
   }).format(amount);
 };
 
-export const formatDate = (dateString) => {
+export const formatDate = (dateString, locale) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
+  return date.toLocaleDateString(locale || currentLocale, {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
 };
 
-export const groupByMonth = (transactions) => {
+export const groupByMonth = (transactions, locale) => {
   const sorted = [...transactions].sort(
     (a, b) => new Date(b.date) - new Date(a.date),
   );
@@ -32,7 +40,7 @@ export const groupByMonth = (transactions) => {
   const lookup = new Map();
 
   sorted.forEach((tx) => {
-    const label = new Date(tx.date).toLocaleDateString("en-US", {
+    const label = new Date(tx.date).toLocaleDateString(locale || currentLocale, {
       month: "long",
       year: "numeric",
     });

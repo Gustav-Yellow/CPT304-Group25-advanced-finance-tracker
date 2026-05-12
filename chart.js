@@ -6,6 +6,7 @@
 import { dom } from './dom.js';
 import { state } from './state.js';
 import { formatCurrency } from './utils.js';
+import { t } from './i18n.js';
 
 export const renderChart = () => {
   const canvas = dom.financeChart;
@@ -59,8 +60,8 @@ export const renderChart = () => {
 
   ctx.fillStyle = "#f8f4e9";
   ctx.font = "14px sans-serif";
-  ctx.fillText("Income", 170, baseY + 20);
-  ctx.fillText("Expense", 160 + barWidth + gap, baseY + 20);
+  ctx.fillText(t("chart.income"), 170, baseY + 20);
+  ctx.fillText(t("chart.expense"), 160 + barWidth + gap, baseY + 20);
 
   ctx.fillText(formatCurrency(income), 150, baseY - incomeHeight - 10);
   ctx.fillText(
@@ -69,10 +70,10 @@ export const renderChart = () => {
     baseY - expenseHeight - 10,
   );
 
-  const chartDescription =
-    `Bar chart comparing total income and total expenses. ` +
-    `Total income is ${formatCurrency(income)}. ` +
-    `Total expenses are ${formatCurrency(expenses)}.`;
+  const chartDescription = t("chart.description", {
+    income: formatCurrency(income),
+    expenses: formatCurrency(expenses),
+  });
 
   canvas.setAttribute("aria-label", chartDescription);
 
