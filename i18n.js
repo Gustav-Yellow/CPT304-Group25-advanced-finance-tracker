@@ -90,6 +90,17 @@ export const translations = {
     "toast.transactionDeleted": "Transaction deleted.",
     "toast.noData": "No data to export.",
     "toast.csvExported": "CSV exported.",
+
+    "cookie.message": "This site uses cookies to improve your experience.",
+    "cookie.privacyLink": "Privacy Policy",
+    "cookie.accept": "Accept",
+    "cookie.decline": "Decline",
+
+    "privacy.title": "Privacy Policy",
+    "privacy.close": "Close",
+    "privacy.content": "<p>This application is entirely client-side. All transaction data is stored only in your browser's localStorage and is never transmitted to any server.</p><p>The application uses localStorage to save your preferences, including theme, language, and cookie consent choices. No personal information is collected, tracked, or shared.</p><p>You can delete all stored data at any time by clearing your browser's site data or localStorage for this domain.</p><p>If you have any questions about this privacy policy, please contact the application maintainer.</p>",
+
+    "footer.privacy": "Privacy Policy",
   },
 
   zh: {
@@ -173,6 +184,17 @@ export const translations = {
     "toast.transactionDeleted": "交易已删除。",
     "toast.noData": "没有可导出的数据。",
     "toast.csvExported": "CSV 已导出。",
+
+    "cookie.message": "本网站使用 Cookie 以改善您的体验。",
+    "cookie.privacyLink": "隐私政策",
+    "cookie.accept": "接受",
+    "cookie.decline": "拒绝",
+
+    "privacy.title": "隐私政策",
+    "privacy.close": "关闭",
+    "privacy.content": "<p>这是一个纯客户端应用。所有交易数据仅存储在您浏览器的 localStorage 中，不会传输至任何服务器。</p><p>本应用使用 localStorage 保存您的偏好设置，包括主题、语言和 Cookie 同意选择。不会收集、追踪或分享任何个人信息。</p><p>您可以随时通过清除浏览器站点数据或该域名的 localStorage 来删除所有存储的数据。</p><p>如果您对此隐私政策有任何疑问，请联系应用维护者。</p>",
+
+    "footer.privacy": "隐私政策",
   },
 };
 
@@ -226,6 +248,13 @@ export function updatePageTranslations() {
     const key = el.getAttribute("data-i18n-placeholder");
     if (key) {
       el.setAttribute("placeholder", t(key));
+    }
+  });
+
+  document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+    const key = el.getAttribute("data-i18n-html");
+    if (key) {
+      el.innerHTML = t(key);
     }
   });
 

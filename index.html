@@ -210,6 +210,17 @@
       </section>
     </div>
 
+    <div class="cookie-banner" id="cookieBanner" aria-hidden="true">
+      <p class="cookie-banner__text">
+        <span data-i18n="cookie.message">This site uses cookies to improve your experience.</span>
+        <button class="cookie-banner__link" id="privacyLinkFromBanner" type="button" data-i18n="cookie.privacyLink">Privacy Policy</button>
+      </p>
+      <div class="cookie-banner__actions">
+        <button class="btn btn--ghost" id="declineCookiesBtn" type="button" data-i18n="cookie.decline">Decline</button>
+        <button class="btn btn--primary" id="acceptCookiesBtn" type="button" data-i18n="cookie.accept">Accept</button>
+      </div>
+    </div>
+
     <div class="modal" id="confirmModal" aria-hidden="true">
       <div class="modal__backdrop" data-close="true"></div>
       <div
@@ -231,7 +242,27 @@
       </div>
     </div>
 
+    <div class="modal" id="privacyModal" aria-hidden="true">
+      <div class="modal__backdrop" data-close="true"></div>
+      <div class="modal__content modal__content--privacy" role="dialog" aria-modal="true" aria-labelledby="privacyTitle">
+        <h3 class="section-title" id="privacyTitle" data-i18n="privacy.title">Privacy Policy</h3>
+        <div class="modal__privacy-text" data-i18n-html="privacy.content">
+          <p>This application is entirely client-side. All transaction data is stored only in your browser's localStorage and is never transmitted to any server.</p>
+          <p>The application uses localStorage to save your preferences, including theme, language, and cookie consent choices. No personal information is collected, tracked, or shared.</p>
+          <p>You can delete all stored data at any time by clearing your browser's site data or localStorage for this domain.</p>
+          <p>If you have any questions about this privacy policy, please contact the application maintainer.</p>
+        </div>
+        <div class="modal__actions">
+          <button class="btn btn--primary" id="closePrivacyBtn" type="button" data-i18n="privacy.close">Close</button>
+        </div>
+      </div>
+    </div>
+
     <div class="toast-container" id="toastContainer"></div>
+
+    <footer class="app__footer">
+      <button class="footer__link" id="privacyLinkFromFooter" type="button" data-i18n="footer.privacy">Privacy Policy</button>
+    </footer>
 
     <script type="module" src="app.js"></script>
   </body>

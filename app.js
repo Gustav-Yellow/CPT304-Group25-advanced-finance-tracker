@@ -11,7 +11,8 @@
  * New import escapeHTML
  */
 import { generateID, formatCurrency, formatDate, groupByMonth, escapeHTML, sanitizeCSVCell, debounceRAF  } from './utils.js';
-import { state, saveToLocalStorage, loadFromLocalStorage, loadTheme, setTheme } from './state.js';
+import { state, saveToLocalStorage, loadFromLocalStorage, loadTheme, setTheme, loadCookieConsent } from './state.js';
+import { initCookieBanner, acceptCookies, declineCookies } from './cookie.js';
 import { dom } from './dom.js';
 import { showToast, clearErrors, setError } from './ui.js';
 import { renderChart } from './chart.js';
@@ -290,8 +291,10 @@ export const initializeApp = () => {
   loadFromLocalStorage();
   loadLanguage();
   loadTheme();
+  state.cookieConsent = loadCookieConsent();
   updatePageTranslations();
   renderApp();
+  initCookieBanner();
 
   setTimeout(() => {
     dom.skeleton.classList.add("is-hidden");
@@ -364,6 +367,31 @@ export const initializeApp = () => {
     btn.setAttribute("data-i18n", state.theme === "light" ? "header.themeDark" : "header.themeLight");
     updatePageTranslations();
     renderApp();
+  });
+
+  dom.acceptCookiesBtn.addEventListener("click", () => {
+    acceptCookies();
+  });
+
+  dom.declineCookiesBtn.addEventListener("click", () => {
+    declineCookies();
+  });
+
+  const openPrivacyModal = () => {
+    dom.privacyModal.classList.add("is-open");
+    dom.privacyModal.setAttribute("aria-hidden", "false");
+  };
+
+  const closePrivacyModal = () => {
+    dom.privacyModal.classList.remove("is-open");
+    dom.privacyModal.setAttribute("aria-hidden", "true");
+  };
+
+  dom.privacyLinkFromBanner.addEventListener("click", openPrivacyModal);
+  dom.privacyLinkFromFooter.addEventListener("click", openPrivacyModal);
+  dom.closePrivacyBtn.addEventListener("click", closePrivacyModal);
+  dom.privacyModal.addEventListener("click", (e) => {
+    if (e.target.dataset.close) closePrivacyModal();
   });
 
   dom.confirmDeleteBtn.addEventListener("click", () => {
