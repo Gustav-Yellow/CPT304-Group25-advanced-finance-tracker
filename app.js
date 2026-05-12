@@ -16,7 +16,7 @@ import { dom } from './dom.js';
 import { showToast, clearErrors, setError } from './ui.js';
 import { renderChart } from './chart.js';
 
-const validateForm = () => {
+export const validateForm = () => {
   clearErrors();
 
   const title = dom.titleInput.value.trim();
@@ -50,7 +50,7 @@ const validateForm = () => {
   return isValid;
 };
 
-const resetFormState = () => {
+export const resetFormState = () => {
   dom.form.reset();
   state.editingId = null;
   dom.submitBtn.textContent = "Add Transaction";
@@ -58,7 +58,7 @@ const resetFormState = () => {
   clearErrors();
 };
 
-const filterTransactions = () => {
+export const filterTransactions = () => {
   const { category, type, search } = state.filters;
 
   return state.transactions.filter((tx) => {
@@ -106,7 +106,7 @@ const filterTransactions = () => {
 /**
  * Fixed Version
  */
-const renderTransactionItem = (tx) => {
+export const renderTransactionItem = (tx) => {
   const typeClass = tx.amount >= 0 ? "amount--income" : "amount--expense";
   const formattedAmount = formatCurrency(tx.amount);
   const formattedDate = formatDate(tx.date);
@@ -129,7 +129,7 @@ const renderTransactionItem = (tx) => {
   `;
 };
 
-const renderSummary = () => {
+export const renderSummary = () => {
   const amounts = state.transactions.map((tx) => tx.amount);
 
   const totalIncome = amounts
@@ -147,7 +147,7 @@ const renderSummary = () => {
   dom.totalBalance.textContent = formatCurrency(totalBalance);
 };
 
-const renderTransactions = () => {
+export const renderTransactions = () => {
   const filtered = filterTransactions();
 
   dom.resultsCount.textContent = `${filtered.length} results`;
@@ -177,13 +177,13 @@ const renderTransactions = () => {
     .join("");
 };
 
-const renderApp = () => {
+export const renderApp = () => {
   renderSummary();
   renderTransactions();
   renderChart();
 };
 
-const addTransaction = () => {
+export const addTransaction = () => {
   if (!validateForm()) {
     showToast("Please fix the highlighted fields.", "error");
     return;
@@ -217,7 +217,7 @@ const addTransaction = () => {
   renderApp();
 };
 
-const startEditing = (id) => {
+export const startEditing = (id) => {
   const transaction = state.transactions.find((tx) => tx.id === id);
   if (!transaction) return;
 
@@ -233,27 +233,27 @@ const startEditing = (id) => {
   showToast("Editing mode enabled.");
 };
 
-const deleteTransaction = (id) => {
+export const deleteTransaction = (id) => {
   state.transactions = state.transactions.filter((tx) => tx.id !== id);
   saveToLocalStorage();
   renderApp();
   showToast("Transaction deleted.");
 };
 
-const openConfirmModal = (id) => {
+export const openConfirmModal = (id) => {
   state.pendingDeleteId = id;
   dom.confirmModal.classList.add("is-open");
   dom.confirmModal.setAttribute("aria-hidden", "false");
 };
 
-const closeConfirmModal = () => {
+export const closeConfirmModal = () => {
   state.pendingDeleteId = null;
   dom.confirmModal.classList.remove("is-open");
   dom.confirmModal.setAttribute("aria-hidden", "true");
 };
 
 // Defect2：csv injection
-const exportToCSV = () => {
+export const exportToCSV = () => {
   if (state.transactions.length === 0) {
     showToast("No data to export.", "error");
     return;
@@ -285,7 +285,7 @@ const exportToCSV = () => {
   showToast("CSV exported.");
 };
 
-const initializeApp = () => {
+export const initializeApp = () => {
   loadFromLocalStorage();
   loadTheme();
   renderApp();
@@ -369,4 +369,9 @@ const initializeApp = () => {
   });
 };
 
-initializeApp();
+// Auto-start in browser; tests import without triggering full initialization
+if (typeof document !== 'undefined' && document.readyState !== 'loading') {
+  initializeApp();
+} else if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', initializeApp);
+}
