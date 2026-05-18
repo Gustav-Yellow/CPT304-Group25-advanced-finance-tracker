@@ -1,13 +1,15 @@
 /** @jest-environment jsdom */
-import {
+import { 
+  state, 
+  saveToLocalStorage, 
+  loadFromLocalStorage, 
+  saveTheme, 
+  setTheme, 
+  loadTheme, 
+  saveCookieConsent, 
+  loadCookieConsent,
   STORAGE_KEY,
-  THEME_KEY,
-  state,
-  saveToLocalStorage,
-  loadFromLocalStorage,
-  saveTheme,
-  setTheme,
-  loadTheme,
+  THEME_KEY
 } from './state.js';
 
 describe('State Module Tests', () => {
@@ -200,6 +202,26 @@ describe('State Module Tests', () => {
     test('should handle missing themeToggleBtn element', () => {
       localStorage.setItem(THEME_KEY, 'dark');
       expect(() => loadTheme()).not.toThrow();
+    });
+  });
+
+  describe('Cookie Consent Operations', () => {
+    test('saveCookieConsent should save current state to localStorage', () => {
+      state.cookieConsent = 'accepted';
+      saveCookieConsent();
+      expect(window.localStorage.getItem('financeTrackerCookieConsent')).toBe('accepted');
+    });
+
+    test('saveCookieConsent should do nothing if state is null', () => {
+      window.localStorage.removeItem('financeTrackerCookieConsent');
+      state.cookieConsent = null;
+      saveCookieConsent();
+      expect(window.localStorage.getItem('financeTrackerCookieConsent')).toBeNull();
+    });
+
+    test('loadCookieConsent should retrieve value from localStorage', () => {
+      window.localStorage.setItem('financeTrackerCookieConsent', 'declined');
+      expect(loadCookieConsent()).toBe('declined');
     });
   });
 });
